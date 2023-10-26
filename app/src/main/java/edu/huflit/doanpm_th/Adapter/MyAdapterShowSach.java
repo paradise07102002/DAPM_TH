@@ -1,4 +1,4 @@
-package edu.huflit.doanqlthuvien.MyAdapter;
+package edu.huflit.doanpm_th.Adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -10,9 +10,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import edu.huflit.doanqlthuvien.ManHinhUser.ManHinhUser;
-import edu.huflit.doanqlthuvien.R;
-import edu.huflit.doanqlthuvien.fragment_sach.ManHinhSach;
+import org.w3c.dom.Text;
+
+import edu.huflit.doanpm_th.ManHinhUser;
+import edu.huflit.doanpm_th.R;
 
 public class MyAdapterShowSach extends BaseAdapter {
     LayoutInflater inflater;
@@ -24,6 +25,7 @@ public class MyAdapterShowSach extends BaseAdapter {
         inflater = LayoutInflater.from(context);
         this.context = context;
     }
+
     @Override
     public int getCount() {
         return ManHinhUser.saches.size();
@@ -39,11 +41,9 @@ public class MyAdapterShowSach extends BaseAdapter {
         return ManHinhUser.saches.get(i).getMa_sach_s();
     }
 
-
     @Override
-    public View getView(int i, View convertView, ViewGroup parent) {
-
-        View view = inflater.inflate(R.layout.item_list_sach_for_user, null);
+    public View getView(int i, View convertView, ViewGroup viewGroup) {
+        View view = inflater.inflate(R.layout.item_list_show_book, null);
 
         textView = (TextView) view.findViewById(R.id.tv_dms11);
         textView = (TextView) view.findViewById(R.id.tv_dms22);
