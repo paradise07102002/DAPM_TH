@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace = "edu.huflit.doanpm_th"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "edu.huflit.doanpm_th"
