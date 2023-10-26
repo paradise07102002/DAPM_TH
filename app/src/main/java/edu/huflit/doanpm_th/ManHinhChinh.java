@@ -25,8 +25,8 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 
 public class ManHinhChinh extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
-    private static final int FR_HOME = 0;
-    private int currentFragment = FR_HOME;
+    private static final int FR_TRANG_CHU = 0;
+    private int currentFragment = FR_TRANG_CHU;
     DrawerLayout drawerLayout;
     Toolbar toolbar;
     public static NavigationView navigationView;
@@ -39,6 +39,8 @@ public class ManHinhChinh extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_man_hinh_chinh);
         setTitle("");
         anhXa();
+        //Hiển thị trang chủ
+        replaceFragment(new ManHinhUser());
 
         //ADD Toolbar
         setSupportActionBar(toolbar);
@@ -56,7 +58,11 @@ public class ManHinhChinh extends AppCompatActivity implements NavigationView.On
                 int itemId = item.getItemId();
                 if (itemId == R.id.action_trang_chu)
                 {
-
+                    if (currentFragment != FR_TRANG_CHU)
+                    {
+                        currentFragment = FR_TRANG_CHU;
+                    }
+                    replaceFragment(new ManHinhUser());
                 }
                 return true;
             }
@@ -92,5 +98,13 @@ public class ManHinhChinh extends AppCompatActivity implements NavigationView.On
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.hcontent_frame, fragment);
         transaction.commit();
+    }
+    public void gotoTrangChu()
+    {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        ManHinhUser manHinhUser = new ManHinhUser();
+
+        fragmentTransaction.replace(R.id.hcontent_frame, manHinhUser);
+        fragmentTransaction.commit();
     }
 }
