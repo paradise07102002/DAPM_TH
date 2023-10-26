@@ -13,6 +13,9 @@
         android:theme="@style/Theme.DoAnPM_TH"
         tools:targetApi="31">
         <activity
+            android:name=".ManHinhChinh"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
