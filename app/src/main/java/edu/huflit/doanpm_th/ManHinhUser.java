@@ -42,7 +42,7 @@ public class ManHinhUser extends Fragment {
         database = new MyDatabase(getActivity());
         saches = new ArrayList<>();
         //Thêm sách
-        insertBook();
+        //insertBook();
         capNhatDuLieuDSach();
 
         return view;
@@ -93,7 +93,13 @@ public class ManHinhUser extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                SharedPreferences lay_ma_sach = getActivity().getSharedPreferences("lay_ma_sach", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = lay_ma_sach.edit();
+                int ma_sach = saches.get(i).getMa_sach_s();
+                editor.putInt("ma_sach", ma_sach);
+                editor.apply();
 
+                manHinhChinh.gotoChiTietSach();
             }
         });
     }
