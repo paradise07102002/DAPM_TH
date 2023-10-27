@@ -42,4 +42,18 @@ public class MyDatabase {
         values.put(DBHelper.MO_TA_SACH, sach.getMo_ta_sach());
         return database.insert(DBHelper.TABLE_SACH, null, values);
     }
+    //Kiểm tra đăng nhập
+    public boolean checkLogin(String username, String password)
+    {
+        String select = "SELECT * FROM " + DBHelper.TABLE_USER + " WHERE " + DBHelper.USERNAME_USER + " = " + "'" + username + "'" + " AND " + DBHelper.PASSWORD_USER + " = " + "'" + password + "'";
+        Cursor cursor = database.rawQuery(select, null);
+        if (cursor.moveToFirst() == false)
+        {
+            return false;//Ko đúng user or pass
+        }
+        else
+        {
+            return true;
+        }
+    }
 }
