@@ -85,10 +85,11 @@ public class ManHinhChinh extends AppCompatActivity implements NavigationView.On
         {
 
         }
-        else if (id == R.id.nav_tittle4)
+        else if (id == R.id.nav_tittle6)
         {
-
+            replaceFragment(new DangNhap());
         }
+
         //Đóng drawer
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
