@@ -9,6 +9,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/edit_edittext3"
+        android:id="@+id/background_detail_sach"
         android:orientation="vertical">
 
         <ImageView
