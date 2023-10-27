@@ -12,7 +12,7 @@
         android:layout_height="32dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="20dp"
-        android:src="icon_back1" />
+        android:src="@drawable/icon_back1"/>
 
     <ImageView
         android:layout_width="match_parent"
