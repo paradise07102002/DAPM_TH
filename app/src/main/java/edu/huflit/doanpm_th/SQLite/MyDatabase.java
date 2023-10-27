@@ -56,4 +56,10 @@ public class MyDatabase {
             return true;
         }
     }
+    public Cursor layDuLieuSachByID(int ma_sach)
+    {
+        String select = "SELECT * FROM " + DBHelper.TABLE_SACH + " WHERE " + DBHelper.MA_SACH_S + " = " + ma_sach;
+        Cursor cursor = database.rawQuery(select, null);
+        return cursor;
+    }
 }
