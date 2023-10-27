@@ -62,4 +62,10 @@ public class MyDatabase {
         Cursor cursor = database.rawQuery(select, null);
         return cursor;
     }
+    public Cursor layDuLieuDauSachByID(int ma_dau_sach)
+    {
+        String select = "SELECT * FROM " + DBHelper.TABLE_LOAI_SACH + " WHERE " + DBHelper.MA_LOAI_SACH_LS + " = " + ma_dau_sach;
+        Cursor cursor = database.rawQuery(select, null);
+        return cursor;
+    }
 }
