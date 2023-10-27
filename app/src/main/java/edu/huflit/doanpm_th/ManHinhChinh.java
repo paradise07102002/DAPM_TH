@@ -108,4 +108,12 @@ public class ManHinhChinh extends AppCompatActivity implements NavigationView.On
         fragmentTransaction.replace(R.id.hcontent_frame, manHinhUser);
         fragmentTransaction.commit();
     }
+    public void gotoChiTietSach()
+    {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        ChiTietSach chiTietSach = new ChiTietSach();
+
+        fragmentTransaction.replace(R.id.hcontent_frame, chiTietSach);
+        fragmentTransaction.commit();
+    }
 }
