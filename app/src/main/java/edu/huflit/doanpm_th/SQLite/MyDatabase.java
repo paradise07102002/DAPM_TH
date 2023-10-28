@@ -68,4 +68,14 @@ public class MyDatabase {
         Cursor cursor = database.rawQuery(select, null);
         return cursor;
     }
+    public boolean checkUsername(String username)
+    {
+        String select = "SELECT * FROM " + DBHelper.TABLE_USER + " WHERE " + DBHelper.USERNAME_USER + " = " + "'" + username + "'";
+        Cursor cursor = database.rawQuery(select, null);
+        if (cursor.moveToFirst())
+        {
+            return true;
+        }
+        return false;
+    }
 }
