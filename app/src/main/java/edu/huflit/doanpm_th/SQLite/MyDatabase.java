@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import edu.huflit.doanpm_th.Object.LoaiSach;
 import edu.huflit.doanpm_th.Object.Sach;
+import edu.huflit.doanpm_th.Object.User;
 
 public class MyDatabase {
     SQLiteDatabase database;
@@ -77,5 +78,17 @@ public class MyDatabase {
             return true;
         }
         return false;
+    }
+    public long addUser(User user)
+    {
+        ContentValues values = new ContentValues();
+        values.put(DBHelper.USERNAME_USER, user.getUsername_user());
+        values.put(DBHelper.PASSWORD_USER, user.getPassword_user());
+        values.put(DBHelper.FULLNAME_USER, user.getFullname_user());
+        values.put(DBHelper.EMAIL_USER, user.getEmail_user());
+        values.put(DBHelper.PHONE_USER, user.getPhone_user());
+        values.put(DBHelper.ROLE_USER, user.getRole_user());
+        values.put(DBHelper.LOAI_KH_USER, user.getLoai_kh_user());
+        return database.insert(DBHelper.TABLE_USER, null, values);
     }
 }
