@@ -106,4 +106,10 @@ public class MyDatabase {
         values.put(DBHelper.NOI_DUNG_BL, binhLuanSach.getNoi_dung_binh_luan());
         return database.insert(DBHelper.TABLE_BINH_LUAN, null, values);
     }
+    public Cursor layDuLieuBinhLuanByMaSach(int ma_sach)
+    {
+        String select = "SELECT * FROM " + DBHelper.TABLE_BINH_LUAN + " WHERE " + DBHelper.MA_SACH_BL + " = " + ma_sach;
+        Cursor cursor = database.rawQuery(select, null);
+        return cursor;
+    }
 }
