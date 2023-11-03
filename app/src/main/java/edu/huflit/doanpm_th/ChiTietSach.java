@@ -3,6 +3,7 @@ package edu.huflit.doanpm_th;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -17,13 +18,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 
+import edu.huflit.doanpm_th.Adapter.MyAdapterBinhLuan;
+import edu.huflit.doanpm_th.Object.BinhLuanSach;
 import edu.huflit.doanpm_th.Object.LoaiSach;
 import edu.huflit.doanpm_th.Object.Sach;
 import edu.huflit.doanpm_th.SQLite.DBHelper;
@@ -39,6 +44,8 @@ public class ChiTietSach extends Fragment {
 
     EditText edt_binh_luan;
     ImageView send;
+    public static ListView lv_show_binh_luan;
+    public static ArrayList<BinhLuanSach> binhLuanSaches;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -47,6 +54,12 @@ public class ChiTietSach extends Fragment {
         manHinhChinh = (ManHinhChinh) getActivity();
         anhXa();
         showDuLieuSach();
+        send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binhLuan();
+            }
+        });
         return view;
     }
     public void anhXa()
@@ -64,6 +77,8 @@ public class ChiTietSach extends Fragment {
         trang_thai = (TextView) view.findViewById(R.id.detail_sach_tt);
         edt_binh_luan = (EditText) view.findViewById(R.id.edt_binh_luan);
         send = (ImageView) view.findViewById(R.id.img_send);
+
+        lv_show_binh_luan = (ListView) view.findViewById(R.id.lv_show_bl);
     }
     public Sach layDuLieu()
     {
@@ -129,5 +144,98 @@ public class ChiTietSach extends Fragment {
         byte[] bytes = sach.getImage_sach();
         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         img_sach.setImageBitmap(bitmap);
+    }
+    public void binhLuan()
+    {
+        SharedPreferences get_user = getActivity().getSharedPreferences("login", Context.MODE_PRIVATE);
+        boolean check_login = get_user.getBoolean("is_login", false);
+        if (check_login == false)
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage("Đăng nhập để bình luận");
+            builder.setNegativeButton("Đóng", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.cancel();
+                }
+            });
+            builder.create().show();
+        }
+        else
+        {
+            SharedPreferences lay_ma_sach = getActivity().getSharedPreferences("lay_ma_sach", Context.MODE_PRIVATE);
+            int ma_sach = lay_ma_sach.getInt("ma_sach", 0);
+
+            BinhLuanSach binhLuanSach = new BinhLuanSach();
+
+            String username = get_user.getString("username", null);
+            Cursor cursor = database.getUserByUsername(username);
+            if (cursor.moveToFirst())
+            {
+                int id_user_index = cursor.getColumnIndex(DBHelper.ID_USER);
+                binhLuanSach.setMa_user_binh_luan(cursor.getInt(id_user_index));
+                binhLuanSach.setMa_sach_binh_luan(ma_sach);
+                binhLuanSach.setNoi_dung_binh_luan(edt_binh_luan.getText().toString().trim());
+                database.addBinhLuan(binhLuanSach);
+
+                Toast.makeText(getActivity(), "Đã gửi bình luận", Toast.LENGTH_LONG).show();
+                edt_binh_luan.setText("");
+                capNhatBinhLuan();
+            }
+
+        }
+    }
+    public void capNhatBinhLuan()
+    {
+        if (binhLuanSaches == null)
+        {
+            binhLuanSaches = new ArrayList<BinhLuanSach>();
+        }
+        else
+        {
+            binhLuanSaches.removeAll(binhLuanSaches);
+        }
+        SharedPreferences lay_ma_sach = getActivity().getSharedPreferences("lay_ma_sach", Context.MODE_PRIVATE);
+        int ma_sach = lay_ma_sach.getInt("ma_sach", 0);
+        database = new MyDatabase(getActivity());
+        Cursor cursor = database.layDuLieuBinhLuanByMaSach(ma_sach);
+        if (cursor != null)
+        {
+            int ma_bl_index = cursor.getColumnIndex(DBHelper.MA_BL);
+            int ma_user_index = cursor.getColumnIndex(DBHelper.MA_USER_BL);
+            int ma_sach_index = cursor.getColumnIndex(DBHelper.MA_SACH_BL);
+            int noi_dung_index = cursor.getColumnIndex(DBHelper.NOI_DUNG_BL);
+            while (cursor.moveToNext())
+            {
+                BinhLuanSach binhLuanSach = new BinhLuanSach();
+                if (ma_bl_index != -1)
+                {
+                    binhLuanSach.setMa_binh_luan(cursor.getInt(ma_bl_index));
+                }
+                if (ma_user_index != -1)
+                {
+                    binhLuanSach.setMa_user_binh_luan(cursor.getInt(ma_user_index));
+                }
+                if (ma_sach_index != -1)
+                {
+                    binhLuanSach.setMa_sach_binh_luan(cursor.getInt(ma_sach_index));
+                }
+                if (noi_dung_index != -1)
+                {
+                    binhLuanSach.setNoi_dung_binh_luan(cursor.getString(noi_dung_index));
+                }
+                binhLuanSaches.add(binhLuanSach);
+            }
+        }
+        if (binhLuanSaches != null)
+        {
+            lv_show_binh_luan.setAdapter(new MyAdapterBinhLuan(getActivity()));
+        }
+        lv_show_binh_luan.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+            }
+        });
     }
 }
