@@ -20,11 +20,24 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String NAM_XUAT_BAN_S = "nam_xuat_ban_s";
     public static final String TRANG_THAI_S = "trang_thai_s";
     public static final String MO_TA_SACH = "mo_ta_sach";
+    //BẢNG Bình Luận Sách
+    public static final String TABLE_BINH_LUAN = "BinhLuanSach";
+    public static final String MA_BL = "ma_binh_luan";
+    public static final String MA_SACH_BL = "ma_sach_binh_luan";
+    public static final String MA_USER_BL = "ma_user_binh_luan";
+    public static final String NOI_DUNG_BL = "noi_dung_binh_luan";
 
     //BẢNG LOẠI SÁCH
     public static final String TABLE_LOAI_SACH = "LoaiSach";
     public static final String MA_LOAI_SACH_LS = "ma_loai_sach_ls";
     public static final String TEN_LOAI_SACH_LS = "ten_loai_sach_ls";
+    //TẠO BẢNG BÌNH LUẬN
+    private static final String TAO_TABLE_BINH_LUAN = ""
+            + "CREATE TABLE " + TABLE_BINH_LUAN + "( "
+            + MA_BL + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + MA_SACH_BL + " INTEGER NOT NULL, "
+            + MA_USER_BL + " INTEGER NOT NULL, "
+            + NOI_DUNG_BL + " TEXT NOT NULL) ";
 
     //BẢNG USER
     public static final String TABLE_USER = "User";
