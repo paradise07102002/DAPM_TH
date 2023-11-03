@@ -112,4 +112,18 @@ public class MyDatabase {
         Cursor cursor = database.rawQuery(select, null);
         return cursor;
     }
+    public User getUserByIDUser(int ma_user)
+    {
+        User user = new User();
+        String select = "SELECT * FROM " + DBHelper.TABLE_USER + " WHERE " + DBHelper.ID_USER + " = " + ma_user;
+        Cursor cursor = database.rawQuery(select, null);
+        if (cursor != null)
+        {
+            int username_index = cursor.getColumnIndex(DBHelper.USERNAME_USER);
+            cursor.moveToFirst();
+            user.setUsername_user(cursor.getString(username_index));
+        }
+        cursor.close();
+        return user;
+    }
 }
