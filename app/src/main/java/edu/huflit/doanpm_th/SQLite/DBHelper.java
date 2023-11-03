@@ -111,6 +111,7 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(TAO_TABLE_LOAI_SACH);
         sqLiteDatabase.execSQL(TAO_TABLE_MUON_TRA);
         sqLiteDatabase.execSQL(TAO_TABLE_USER);
+        sqLiteDatabase.execSQL(TAO_TABLE_BINH_LUAN);
     }
 
     @Override
