@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import edu.huflit.doanpm_th.Object.BinhLuanSach;
 import edu.huflit.doanpm_th.Object.LoaiSach;
 import edu.huflit.doanpm_th.Object.Sach;
 import edu.huflit.doanpm_th.Object.User;
@@ -96,5 +97,13 @@ public class MyDatabase {
         String select = "SELECT * FROM " + DBHelper.TABLE_USER + " WHERE " + DBHelper.USERNAME_USER + " = " + "'" + username + "'";
         Cursor cursor = database.rawQuery(select, null);
         return cursor;
+    }
+    public long addBinhLuan(BinhLuanSach binhLuanSach)
+    {
+        ContentValues values = new ContentValues();
+        values.put(DBHelper.MA_USER_BL, binhLuanSach.getMa_user_binh_luan());
+        values.put(DBHelper.MA_SACH_BL, binhLuanSach.getMa_sach_binh_luan());
+        values.put(DBHelper.NOI_DUNG_BL, binhLuanSach.getNoi_dung_binh_luan());
+        return database.insert(DBHelper.TABLE_BINH_LUAN, null, values);
     }
 }
