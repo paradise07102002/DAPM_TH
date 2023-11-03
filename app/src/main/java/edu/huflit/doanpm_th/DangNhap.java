@@ -51,6 +51,7 @@ public class DangNhap extends Fragment {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                manHinhChinh.gotoTrangChu();
             }
         });
         next_dang_ky.setOnClickListener(new View.OnClickListener() {
