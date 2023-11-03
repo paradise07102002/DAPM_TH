@@ -91,4 +91,10 @@ public class MyDatabase {
         values.put(DBHelper.LOAI_KH_USER, user.getLoai_kh_user());
         return database.insert(DBHelper.TABLE_USER, null, values);
     }
+    public Cursor getUserByUsername(String username)
+    {
+        String select = "SELECT * FROM " + DBHelper.TABLE_USER + " WHERE " + DBHelper.USERNAME_USER + " = " + "'" + username + "'";
+        Cursor cursor = database.rawQuery(select, null);
+        return cursor;
+    }
 }
