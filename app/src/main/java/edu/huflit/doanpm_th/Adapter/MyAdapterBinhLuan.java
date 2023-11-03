@@ -55,7 +55,7 @@ public class MyAdapterBinhLuan extends BaseAdapter {
         textView.setText(user.getUsername_user());
 
         textView = (TextView) view.findViewById(R.id.tv_noi_dung_bl);
-        textView.setText(DetailSach.binhLuanSaches.get(i).getNoi_dung_binh_luan());
+        textView.setText(ChiTietSach.binhLuanSaches.get(i).getNoi_dung_binh_luan());
 
         return view;
     }
