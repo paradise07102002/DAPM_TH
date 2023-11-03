@@ -42,7 +42,18 @@ public class DangKy extends Fragment {
                 kiemTraNhapThongTin();
             }
         });
-
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                manHinhChinh.gotoDangNhap();
+            }
+        });
+        next_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                manHinhChinh.gotoDangNhap();
+            }
+        });
         return view;
     }
     public void anhXa()
