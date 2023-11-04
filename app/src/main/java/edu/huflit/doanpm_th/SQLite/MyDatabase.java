@@ -126,4 +126,11 @@ public class MyDatabase {
         cursor.close();
         return user;
     }
+    //Tìm kiếm sách qua tên
+    public Cursor layDuLieuSachByName(String name_sach)
+    {
+        String select = " SELECT * FROM " + DBHelper.TABLE_SACH + " WHERE " + DBHelper.TEN_SACH_S + " LIKE " + "'%" + name_sach + "%'";
+        Cursor cursor = database.rawQuery(select, null);
+        return cursor;
+    }
 }
