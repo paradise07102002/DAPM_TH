@@ -150,6 +150,7 @@ public class ChiTietSach extends Fragment {
         byte[] bytes = sach.getImage_sach();
         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         img_sach.setImageBitmap(bitmap);
+        capNhatBinhLuan();
     }
     public void binhLuan()
     {
