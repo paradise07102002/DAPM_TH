@@ -24,6 +24,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 
+import edu.huflit.doanpm_th.Object.User;
+import edu.huflit.doanpm_th.SQLite.DBHelper;
+import edu.huflit.doanpm_th.SQLite.MyDatabase;
+
 public class ManHinhChinh extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private static final int FR_TRANG_CHU = 0;
     private int currentFragment = FR_TRANG_CHU;
@@ -39,6 +43,35 @@ public class ManHinhChinh extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_man_hinh_chinh);
         setTitle("");
         anhXa();
+        //Hiển thị thông tin đăng nhập lên header
+        SharedPreferences get_user = getSharedPreferences("login", MODE_PRIVATE);
+        String username = get_user.getString("username", null);
+        boolean is_login = get_user.getBoolean("is_login", false);
+        if (is_login == false)
+        {
+            TextView show_username2 = navigationView.getHeaderView(0).findViewById(R.id.username1);
+            TextView show_email2 = navigationView.getHeaderView(0).findViewById(R.id.email1);
+            show_email2.setText("Email");
+            show_username2.setText("Username");
+            replaceFragment(new ManHinhUser());
+        }
+        else
+        {
+            MyDatabase database = new MyDatabase(getApplicationContext());
+            //LẤY USER NAME EMAIL SHOW LÊN HEADER
+            TextView show_username = navigationView.getHeaderView(0).findViewById(R.id.username1);
+            TextView show_email = navigationView.getHeaderView(0).findViewById(R.id.email1);
+            Cursor cursor = database.getUserByUsername(username);
+
+            int username_index = cursor.getColumnIndex(DBHelper.USERNAME_USER);
+            int email_index = cursor.getColumnIndex(DBHelper.EMAIL_USER);
+            cursor.moveToFirst();
+
+            show_username.setText(cursor.getString(username_index));
+            show_email.setText(cursor.getString(email_index));
+            cursor.close();
+            replaceFragment(new ManHinhUser());
+        }
         //Hiển thị trang chủ
         replaceFragment(new ManHinhUser());
 
@@ -67,6 +100,19 @@ public class ManHinhChinh extends AppCompatActivity implements NavigationView.On
                 return true;
             }
         });
+        //Kiểm tra đăng nhập, nếu chưa thì hiện đăng nhập, ngược lại hiện đăng xuất trên menu
+        SharedPreferences sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
+        Menu navigationMenu = navigationView.getMenu();
+        MenuItem menuItem = navigationMenu.findItem(R.id.nav_tittle6);
+        boolean check_login = sharedPreferences.getBoolean("is_login", false);
+        if (check_login == false)
+        {
+            menuItem.setTitle("Đăng nhập");
+        }
+        else
+        {
+            menuItem.setTitle("Đăng xuất");
+        }
     }
     public void anhXa()
     {
@@ -87,7 +133,35 @@ public class ManHinhChinh extends AppCompatActivity implements NavigationView.On
         }
         else if (id == R.id.nav_tittle6)
         {
-            replaceFragment(new DangNhap());
+            SharedPreferences sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            boolean check_login = sharedPreferences.getBoolean("is_login", false);
+            if (check_login == false)
+            {
+                replaceFragment(new DangNhap());
+            }
+            else if (check_login)
+            {
+                //Khi đăng xuất thì header ko còn hiện username và email
+                TextView show_username2 = navigationView.getHeaderView(0).findViewById(R.id.username1);
+                TextView show_email2 = navigationView.getHeaderView(0).findViewById(R.id.email1);
+                show_email2.setText("Email");
+                show_username2.setText("Username");
+
+                SharedPreferences sharedPreferences1 = getSharedPreferences("login", MODE_PRIVATE);
+                SharedPreferences.Editor editorr = sharedPreferences1.edit();
+                editorr.putBoolean("is_login", false);
+                editorr.putString("username", null);
+                editorr.apply();
+                Toast.makeText(ManHinhChinh.this, "Đã đăng xuất", Toast.LENGTH_LONG).show();
+
+                //Kiểm tra đăng nhập, nếu chưa thì hiện đăng nhập, ngược lại hiện đăng xuất trên menu
+                Menu navigationMenu = navigationView.getMenu();
+                MenuItem menuItem = navigationMenu.findItem(R.id.nav_tittle6);
+                menuItem.setTitle("Đăng nhập");
+                replaceFragment(new ManHinhUser());
+
+            }
         }
 
         //Đóng drawer
