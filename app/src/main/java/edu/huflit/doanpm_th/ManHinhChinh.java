@@ -15,6 +15,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -113,6 +114,25 @@ public class ManHinhChinh extends AppCompatActivity implements NavigationView.On
         {
             menuItem.setTitle("Đăng xuất");
         }
+        //Tìm kiếm sách
+        img_tim_kiem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (edt_tim_kiem.length() == 0)
+                {
+                    Toast.makeText(ManHinhChinh.this, "Vui lòng nhập thông tin tìm kiếm", Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    String ten_sach_tim_kiem = edt_tim_kiem.getText().toString().trim();
+                    SharedPreferences name_sach = getSharedPreferences("search_sach", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = name_sach.edit();
+                    editor.putString("name_sach", ten_sach_tim_kiem);
+                    editor.apply();
+                    replaceFragment(new TimKiemSach());
+                }
+            }
+        });
     }
     public void anhXa()
     {
