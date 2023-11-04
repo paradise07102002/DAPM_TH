@@ -38,6 +38,12 @@ public class TimKiemSach extends Fragment {
         saches = new ArrayList<>();
         anhXa();
         capNhatDuLieuDSach();
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                manHinhChinh.gotoTrangChu();
+            }
+        });
         return view;
     }
     public void anhXa()
