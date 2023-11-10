@@ -33,6 +33,12 @@ public class TaiKhoan extends Fragment {
         manHinhChinh = (ManHinhChinh) getActivity();
         anhXa();
         showThongTin();
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                manHinhChinh.gotoTrangChu();
+            }
+        });
         return view;
     }
     public void anhXa()
