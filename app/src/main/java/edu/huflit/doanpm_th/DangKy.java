@@ -64,7 +64,7 @@ public class DangKy extends Fragment {
         re_password = (EditText) view.findViewById(R.id.dk_re_password);
         fullname = (EditText) view.findViewById(R.id.dk_fullname);
         email = (EditText) view.findViewById(R.id.dk_email);
-        phone = (EditText) view.findViewById(R.id.dk_password);
+        phone = (EditText) view.findViewById(R.id.dk_phone);
 
         back = (ImageView) view.findViewById(R.id.dang_ky_back);
         next_login = (TextView) view.findViewById(R.id.dk_next_login);
