@@ -20,6 +20,6 @@ Mục đích của ứng dụng Quản lý Thư viện là tạo ra một nền 
 Hoàn thành các chức năng đã đề ra, xây dựng giao diện ưa nhìn, phân quyền cho ứng dụng, phát triển một số tính năng như: bình luận và đánh giá sách, nhắn tin giữa admin và người dùng.
 # Công nghệ sử dụng: Android Studio, Java, SQLite
 # Phân công công việc:
-- Tú: Đăng nhập, Tìm kiếm sách, Thêm sách vào yêu thích.
-- Tuyết: Đăng ký, tìm kiếm sách, Thêm sách vào yêu thích.
-- Khôi: Giao diện, SQLite, Chi tiết sách, Bình luận sách.
+- Tú: Đăng nhập, Tìm kiếm sách, Xem thông tin tài khoản.
+- Tuyết: Đăng ký, tìm kiếm sách, Đổi mật khẩu.
+- Khôi: Giao diện, SQLite, Chi tiết sách, Bình luận sách, Thay đổi thông tin tài khoản.
