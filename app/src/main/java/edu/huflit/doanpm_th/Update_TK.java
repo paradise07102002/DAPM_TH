@@ -1,4 +1,4 @@
-package edu.huflit.kdclpm_lt.TaiKhoan;
+package edu.huflit.doanpm_th;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -17,11 +17,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import edu.huflit.kdclpm_lt.ManHinhChinh;
-import edu.huflit.kdclpm_lt.Object.User;
-import edu.huflit.kdclpm_lt.R;
-import edu.huflit.kdclpm_lt.SQLite.DBHelper;
-import edu.huflit.kdclpm_lt.SQLite.MyDatabase;
+import edu.huflit.doanpm_th.Object.User;
+import edu.huflit.doanpm_th.SQLite.DBHelper;
+import edu.huflit.doanpm_th.SQLite.MyDatabase;
 
 public class Update_TK extends Fragment {
     View view;
@@ -47,7 +45,7 @@ public class Update_TK extends Fragment {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                manHinhChinh.nextTaiKhoan();
+                manHinhChinh.gotoTaiKhoan();
             }
         });
         return view;
@@ -82,7 +80,7 @@ public class Update_TK extends Fragment {
         User user = new User();
         user.setFullname_user(name.getText().toString().trim());
         user.setEmail_user(email.getText().toString().trim());
-        user.setPassword_user(phone.getText().toString().trim());
+        user.setPhone_user(phone.getText().toString().trim());
         user.setUsername_user(get_user.getString("username", null));
         database.updateUser(user);
         Toast.makeText(getActivity(), "Cập nhật thành công", Toast.LENGTH_LONG).show();

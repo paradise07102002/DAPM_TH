@@ -39,6 +39,12 @@ public class TaiKhoan extends Fragment {
                 manHinhChinh.gotoTrangChu();
             }
         });
+        next_update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                manHinhChinh.gotoUpdateTaiKhoan();
+            }
+        });
         return view;
     }
     public void anhXa()
