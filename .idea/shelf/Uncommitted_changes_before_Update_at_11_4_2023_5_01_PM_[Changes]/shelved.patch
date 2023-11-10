@@ -1,0 +1,414 @@
+Index: app/src/main/java/edu/huflit/doanpm_th/SQLite/MyDatabase.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package edu.huflit.doanpm_th.SQLite;\r\n\r\nimport android.content.ContentValues;\r\nimport android.content.Context;\r\nimport android.database.Cursor;\r\nimport android.database.sqlite.SQLiteDatabase;\r\n\r\nimport edu.huflit.doanpm_th.Object.BinhLuanSach;\r\nimport edu.huflit.doanpm_th.Object.LoaiSach;\r\nimport edu.huflit.doanpm_th.Object.Sach;\r\nimport edu.huflit.doanpm_th.Object.User;\r\n\r\npublic class MyDatabase {\r\n    SQLiteDatabase database;\r\n    DBHelper helper;\r\n\r\n    public MyDatabase(Context context)\r\n    {\r\n        helper = new DBHelper(context);\r\n        database = helper.getWritableDatabase();\r\n    }\r\n    public Cursor layDuLieuSach()\r\n    {\r\n        String[] cot = {DBHelper.MA_SACH_S, DBHelper.TEN_SACH_S, DBHelper.IMAGE_SACH};\r\n        Cursor cursor = database.query(DBHelper.TABLE_SACH, cot, null, null, null, null, null);\r\n        return cursor;\r\n    }\r\n    public long addLoaiSach(LoaiSach loaiSach)\r\n    {\r\n        ContentValues values = new ContentValues();\r\n        values.put(DBHelper.TEN_LOAI_SACH_LS, loaiSach.getLoai_sach_ls());\r\n        return database.insert(DBHelper.TABLE_LOAI_SACH, null, values);\r\n    }\r\n    public long addBook(Sach sach)\r\n    {\r\n        ContentValues values = new ContentValues();\r\n        values.put(DBHelper.MA_LOAI_SACH_S, sach.getMa_loai_sach_s());\r\n        values.put(DBHelper.TEN_SACH_S, sach.getTen_sach_s());\r\n        values.put(DBHelper.TAC_GIA_S, sach.getTac_gia_s());\r\n        values.put(DBHelper.NHA_XUAT_BAN_S, sach.getNha_xuat_ban_s());\r\n        values.put(DBHelper.NAM_XUAT_BAN_S, sach.getNam_xuat_ban_s());\r\n        values.put(DBHelper.IMAGE_SACH, sach.getImage_sach());\r\n        values.put(DBHelper.TRANG_THAI_S, 0);\r\n        values.put(DBHelper.MO_TA_SACH, sach.getMo_ta_sach());\r\n        return database.insert(DBHelper.TABLE_SACH, null, values);\r\n    }\r\n    //Kiểm tra đăng nhập\r\n    public boolean checkLogin(String username, String password)\r\n    {\r\n        String select = \"SELECT * FROM \" + DBHelper.TABLE_USER + \" WHERE \" + DBHelper.USERNAME_USER + \" = \" + \"'\" + username + \"'\" + \" AND \" + DBHelper.PASSWORD_USER + \" = \" + \"'\" + password + \"'\";\r\n        Cursor cursor = database.rawQuery(select, null);\r\n        if (cursor.moveToFirst() == false)\r\n        {\r\n            return false;//Ko đúng user or pass\r\n        }\r\n        else\r\n        {\r\n            return true;\r\n        }\r\n    }\r\n    public Cursor layDuLieuSachByID(int ma_sach)\r\n    {\r\n        String select = \"SELECT * FROM \" + DBHelper.TABLE_SACH + \" WHERE \" + DBHelper.MA_SACH_S + \" = \" + ma_sach;\r\n        Cursor cursor = database.rawQuery(select, null);\r\n        return cursor;\r\n    }\r\n    public Cursor layDuLieuDauSachByID(int ma_dau_sach)\r\n    {\r\n        String select = \"SELECT * FROM \" + DBHelper.TABLE_LOAI_SACH + \" WHERE \" + DBHelper.MA_LOAI_SACH_LS + \" = \" + ma_dau_sach;\r\n        Cursor cursor = database.rawQuery(select, null);\r\n        return cursor;\r\n    }\r\n    public boolean checkUsername(String username)\r\n    {\r\n        String select = \"SELECT * FROM \" + DBHelper.TABLE_USER + \" WHERE \" + DBHelper.USERNAME_USER + \" = \" + \"'\" + username + \"'\";\r\n        Cursor cursor = database.rawQuery(select, null);\r\n        if (cursor.moveToFirst())\r\n        {\r\n            return true;\r\n        }\r\n        return false;\r\n    }\r\n    public long addUser(User user)\r\n    {\r\n        ContentValues values = new ContentValues();\r\n        values.put(DBHelper.USERNAME_USER, user.getUsername_user());\r\n        values.put(DBHelper.PASSWORD_USER, user.getPassword_user());\r\n        values.put(DBHelper.FULLNAME_USER, user.getFullname_user());\r\n        values.put(DBHelper.EMAIL_USER, user.getEmail_user());\r\n        values.put(DBHelper.PHONE_USER, user.getPhone_user());\r\n        values.put(DBHelper.ROLE_USER, user.getRole_user());\r\n        values.put(DBHelper.LOAI_KH_USER, user.getLoai_kh_user());\r\n        return database.insert(DBHelper.TABLE_USER, null, values);\r\n    }\r\n    public Cursor getUserByUsername(String username)\r\n    {\r\n        String select = \"SELECT * FROM \" + DBHelper.TABLE_USER + \" WHERE \" + DBHelper.USERNAME_USER + \" = \" + \"'\" + username + \"'\";\r\n        Cursor cursor = database.rawQuery(select, null);\r\n        return cursor;\r\n    }\r\n    public long addBinhLuan(BinhLuanSach binhLuanSach)\r\n    {\r\n        ContentValues values = new ContentValues();\r\n        values.put(DBHelper.MA_USER_BL, binhLuanSach.getMa_user_binh_luan());\r\n        values.put(DBHelper.MA_SACH_BL, binhLuanSach.getMa_sach_binh_luan());\r\n        values.put(DBHelper.NOI_DUNG_BL, binhLuanSach.getNoi_dung_binh_luan());\r\n        return database.insert(DBHelper.TABLE_BINH_LUAN, null, values);\r\n    }\r\n    public Cursor layDuLieuBinhLuanByMaSach(int ma_sach)\r\n    {\r\n        String select = \"SELECT * FROM \" + DBHelper.TABLE_BINH_LUAN + \" WHERE \" + DBHelper.MA_SACH_BL + \" = \" + ma_sach;\r\n        Cursor cursor = database.rawQuery(select, null);\r\n        return cursor;\r\n    }\r\n    public User getUserByIDUser(int ma_user)\r\n    {\r\n        User user = new User();\r\n        String select = \"SELECT * FROM \" + DBHelper.TABLE_USER + \" WHERE \" + DBHelper.ID_USER + \" = \" + ma_user;\r\n        Cursor cursor = database.rawQuery(select, null);\r\n        if (cursor != null)\r\n        {\r\n            int username_index = cursor.getColumnIndex(DBHelper.USERNAME_USER);\r\n            cursor.moveToFirst();\r\n            user.setUsername_user(cursor.getString(username_index));\r\n        }\r\n        cursor.close();\r\n        return user;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/edu/huflit/doanpm_th/SQLite/MyDatabase.java b/app/src/main/java/edu/huflit/doanpm_th/SQLite/MyDatabase.java
+--- a/app/src/main/java/edu/huflit/doanpm_th/SQLite/MyDatabase.java	(revision 39604e8831dfc044849eb7742ef3c627904178fe)
++++ b/app/src/main/java/edu/huflit/doanpm_th/SQLite/MyDatabase.java	(date 1699090969350)
+@@ -126,4 +126,11 @@
+         cursor.close();
+         return user;
+     }
++    //Tìm kiếm sách qua tên
++    public Cursor layDuLieuSachByName(String name_sach)
++    {
++        String select = " SELECT * FROM " + DBHelper.TABLE_SACH + " WHERE " + DBHelper.TEN_SACH_S + " LIKE " + "'%" + name_sach + "%'";
++        Cursor cursor = database.rawQuery(select, null);
++        return cursor;
++    }
+ }
+Index: app/src/main/java/edu/huflit/doanpm_th/ChiTietSach.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package edu.huflit.doanpm_th;\r\n\r\nimport android.animation.ArgbEvaluator;\r\nimport android.animation.ValueAnimator;\r\nimport android.content.Context;\r\nimport android.content.DialogInterface;\r\nimport android.content.SharedPreferences;\r\nimport android.database.Cursor;\r\nimport android.graphics.Bitmap;\r\nimport android.graphics.BitmapFactory;\r\nimport android.graphics.Color;\r\nimport android.os.Bundle;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.AdapterView;\r\nimport android.widget.EditText;\r\nimport android.widget.ImageView;\r\nimport android.widget.ListView;\r\nimport android.widget.TextView;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.annotation.Nullable;\r\nimport androidx.appcompat.app.AlertDialog;\r\nimport androidx.fragment.app.Fragment;\r\n\r\nimport java.util.ArrayList;\r\n\r\nimport edu.huflit.doanpm_th.Adapter.MyAdapterBinhLuan;\r\nimport edu.huflit.doanpm_th.Object.BinhLuanSach;\r\nimport edu.huflit.doanpm_th.Object.LoaiSach;\r\nimport edu.huflit.doanpm_th.Object.Sach;\r\nimport edu.huflit.doanpm_th.SQLite.DBHelper;\r\nimport edu.huflit.doanpm_th.SQLite.MyDatabase;\r\n\r\npublic class ChiTietSach extends Fragment {\r\n    View view;\r\n    View background;\r\n    MyDatabase database;\r\n    ManHinhChinh manHinhChinh;\r\n    ImageView back, img_sach;\r\n    TextView dau_sach, ten_sach, tac_gia, nha_xb, nam_xb, trang_thai, mo_ta_sach;\r\n\r\n    EditText edt_binh_luan;\r\n    ImageView send;\r\n    public static ListView lv_show_binh_luan;\r\n    public static ArrayList<BinhLuanSach> binhLuanSaches;\r\n    @Nullable\r\n    @Override\r\n    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {\r\n        view = inflater.inflate(R.layout.chi_tiet_sach, container, false);\r\n        database = new MyDatabase(getActivity());\r\n        manHinhChinh = (ManHinhChinh) getActivity();\r\n        anhXa();\r\n        showDuLieuSach();\r\n        send.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                binhLuan();\r\n            }\r\n        });\r\n        back.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                manHinhChinh.gotoTrangChu();\r\n            }\r\n        });\r\n        return view;\r\n    }\r\n    public void anhXa()\r\n    {\r\n        background = (View) view.findViewById(R.id.background_detail_sach);\r\n\r\n        back = (ImageView) view.findViewById(R.id.detail_sach_back);\r\n        img_sach = (ImageView) view.findViewById(R.id.detail_sach_img);\r\n\r\n        dau_sach = (TextView) view.findViewById(R.id.detail_sach_spinner);\r\n        ten_sach = (TextView) view.findViewById(R.id.detail_sach_name);\r\n        tac_gia = (TextView) view.findViewById(R.id.detail_sach_tg);\r\n        nha_xb = (TextView) view.findViewById(R.id.detail_sach_nhaxb);\r\n        nam_xb = (TextView) view.findViewById(R.id.detail_sach_namxb);\r\n        trang_thai = (TextView) view.findViewById(R.id.detail_sach_tt);\r\n        edt_binh_luan = (EditText) view.findViewById(R.id.edt_binh_luan);\r\n        send = (ImageView) view.findViewById(R.id.img_send);\r\n\r\n        lv_show_binh_luan = (ListView) view.findViewById(R.id.lv_show_bl);\r\n    }\r\n    public Sach layDuLieu()\r\n    {\r\n        SharedPreferences lay_ma_sach = getActivity().getSharedPreferences(\"lay_ma_sach\", Context.MODE_PRIVATE);\r\n        int ma_sach = lay_ma_sach.getInt(\"ma_sach\", 0);\r\n        Cursor cursor = database.layDuLieuSachByID(ma_sach);\r\n        Sach sach = new Sach();\r\n        if (cursor != null)\r\n        {\r\n            int ma_dau_sach_index = cursor.getColumnIndex(DBHelper.MA_LOAI_SACH_S);\r\n\r\n            int ten_sach_index = cursor.getColumnIndex(DBHelper.TEN_SACH_S);\r\n            int ten_tg_index = cursor.getColumnIndex(DBHelper.TAC_GIA_S);\r\n            int nha_xb_index = cursor.getColumnIndex(DBHelper.NHA_XUAT_BAN_S);\r\n            int nam_xb_index = cursor.getColumnIndex(DBHelper.NAM_XUAT_BAN_S);\r\n            int trang_thai_index = cursor.getColumnIndex(DBHelper.TRANG_THAI_S);\r\n            int mo_ta_index = cursor.getColumnIndex(DBHelper.MO_TA_SACH);\r\n            int img_sach_index = cursor.getColumnIndex(DBHelper.IMAGE_SACH);\r\n\r\n            cursor.moveToFirst();\r\n            sach.setMa_loai_sach_s(cursor.getInt(ma_dau_sach_index));\r\n            sach.setTen_sach_s(cursor.getString(ten_sach_index));\r\n            sach.setTac_gia_s(cursor.getString(ten_tg_index));\r\n            sach.setNha_xuat_ban_s(cursor.getString(nha_xb_index));\r\n            sach.setNam_xuat_ban_s(cursor.getInt(nam_xb_index));\r\n            sach.setTrang_thai_s(cursor.getInt(trang_thai_index));\r\n            sach.setMo_ta_sach(cursor.getString(mo_ta_index));\r\n            sach.setImage_sach(cursor.getBlob(img_sach_index));\r\n\r\n            cursor.close();\r\n        }\r\n        return sach;\r\n    }\r\n    public void showDuLieuSach()\r\n    {\r\n        Sach sach = layDuLieu();\r\n        LoaiSach loaiSach = new LoaiSach();\r\n\r\n        //Ta có mã đầu sách, truy vấn lấy tên đầu sách\r\n        String ten_dau_sach = \"\";\r\n        Cursor cursor = database.layDuLieuDauSachByID(sach.getMa_loai_sach_s());\r\n        if (cursor != null)\r\n        {\r\n            int ten_dau_sach_index = cursor.getColumnIndex(DBHelper.TEN_LOAI_SACH_LS);\r\n            cursor.moveToFirst();\r\n            loaiSach.setLoai_sach_ls(cursor.getString(ten_dau_sach_index));\r\n            cursor.close();\r\n        }\r\n        dau_sach.setText(loaiSach.getLoai_sach_ls());\r\n        ten_sach.setText(sach.getTen_sach_s());\r\n        tac_gia.setText(sach.getTac_gia_s());\r\n        nha_xb.setText(sach.getNha_xuat_ban_s());\r\n        nam_xb.setText(Integer.toString(sach.getNam_xuat_ban_s()));\r\n        int tt = sach.getTrang_thai_s();\r\n        if (tt == 0)\r\n        {\r\n            trang_thai.setText(\"Chưa cho mượn\");\r\n        }\r\n        else\r\n        {\r\n            trang_thai.setText(\"Đã cho mượn\");\r\n        }\r\n        byte[] bytes = sach.getImage_sach();\r\n        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);\r\n        img_sach.setImageBitmap(bitmap);\r\n    }\r\n    public void binhLuan()\r\n    {\r\n        SharedPreferences get_user = getActivity().getSharedPreferences(\"login\", Context.MODE_PRIVATE);\r\n        boolean check_login = get_user.getBoolean(\"is_login\", false);\r\n        if (check_login == false)\r\n        {\r\n            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());\r\n            builder.setMessage(\"Đăng nhập để bình luận\");\r\n            builder.setNegativeButton(\"Đóng\", new DialogInterface.OnClickListener() {\r\n                @Override\r\n                public void onClick(DialogInterface dialogInterface, int i) {\r\n                    dialogInterface.cancel();\r\n                }\r\n            });\r\n            builder.create().show();\r\n        }\r\n        else\r\n        {\r\n            SharedPreferences lay_ma_sach = getActivity().getSharedPreferences(\"lay_ma_sach\", Context.MODE_PRIVATE);\r\n            int ma_sach = lay_ma_sach.getInt(\"ma_sach\", 0);\r\n\r\n            BinhLuanSach binhLuanSach = new BinhLuanSach();\r\n\r\n            String username = get_user.getString(\"username\", null);\r\n            Cursor cursor = database.getUserByUsername(username);\r\n            if (cursor.moveToFirst())\r\n            {\r\n                int id_user_index = cursor.getColumnIndex(DBHelper.ID_USER);\r\n                binhLuanSach.setMa_user_binh_luan(cursor.getInt(id_user_index));\r\n                binhLuanSach.setMa_sach_binh_luan(ma_sach);\r\n                binhLuanSach.setNoi_dung_binh_luan(edt_binh_luan.getText().toString().trim());\r\n                database.addBinhLuan(binhLuanSach);\r\n\r\n                Toast.makeText(getActivity(), \"Đã gửi bình luận\", Toast.LENGTH_LONG).show();\r\n                edt_binh_luan.setText(\"\");\r\n                capNhatBinhLuan();\r\n            }\r\n\r\n        }\r\n    }\r\n    public void capNhatBinhLuan()\r\n    {\r\n        if (binhLuanSaches == null)\r\n        {\r\n            binhLuanSaches = new ArrayList<BinhLuanSach>();\r\n        }\r\n        else\r\n        {\r\n            binhLuanSaches.removeAll(binhLuanSaches);\r\n        }\r\n        SharedPreferences lay_ma_sach = getActivity().getSharedPreferences(\"lay_ma_sach\", Context.MODE_PRIVATE);\r\n        int ma_sach = lay_ma_sach.getInt(\"ma_sach\", 0);\r\n        database = new MyDatabase(getActivity());\r\n        Cursor cursor = database.layDuLieuBinhLuanByMaSach(ma_sach);\r\n        if (cursor != null)\r\n        {\r\n            int ma_bl_index = cursor.getColumnIndex(DBHelper.MA_BL);\r\n            int ma_user_index = cursor.getColumnIndex(DBHelper.MA_USER_BL);\r\n            int ma_sach_index = cursor.getColumnIndex(DBHelper.MA_SACH_BL);\r\n            int noi_dung_index = cursor.getColumnIndex(DBHelper.NOI_DUNG_BL);\r\n            while (cursor.moveToNext())\r\n            {\r\n                BinhLuanSach binhLuanSach = new BinhLuanSach();\r\n                if (ma_bl_index != -1)\r\n                {\r\n                    binhLuanSach.setMa_binh_luan(cursor.getInt(ma_bl_index));\r\n                }\r\n                if (ma_user_index != -1)\r\n                {\r\n                    binhLuanSach.setMa_user_binh_luan(cursor.getInt(ma_user_index));\r\n                }\r\n                if (ma_sach_index != -1)\r\n                {\r\n                    binhLuanSach.setMa_sach_binh_luan(cursor.getInt(ma_sach_index));\r\n                }\r\n                if (noi_dung_index != -1)\r\n                {\r\n                    binhLuanSach.setNoi_dung_binh_luan(cursor.getString(noi_dung_index));\r\n                }\r\n                binhLuanSaches.add(binhLuanSach);\r\n            }\r\n        }\r\n        if (binhLuanSaches != null)\r\n        {\r\n            lv_show_binh_luan.setAdapter(new MyAdapterBinhLuan(getActivity()));\r\n        }\r\n        lv_show_binh_luan.setOnItemClickListener(new AdapterView.OnItemClickListener() {\r\n            @Override\r\n            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {\r\n\r\n            }\r\n        });\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/edu/huflit/doanpm_th/ChiTietSach.java b/app/src/main/java/edu/huflit/doanpm_th/ChiTietSach.java
+--- a/app/src/main/java/edu/huflit/doanpm_th/ChiTietSach.java	(revision 39604e8831dfc044849eb7742ef3c627904178fe)
++++ b/app/src/main/java/edu/huflit/doanpm_th/ChiTietSach.java	(date 1699090969340)
+@@ -150,6 +150,7 @@
+         byte[] bytes = sach.getImage_sach();
+         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+         img_sach.setImageBitmap(bitmap);
++        capNhatBinhLuan();
+     }
+     public void binhLuan()
+     {
+Index: app/src/main/java/edu/huflit/doanpm_th/ManHinhChinh.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package edu.huflit.doanpm_th;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.appcompat.app.ActionBarDrawerToggle;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.appcompat.widget.Toolbar;\r\nimport androidx.core.view.GravityCompat;\r\nimport androidx.drawerlayout.widget.DrawerLayout;\r\nimport androidx.fragment.app.Fragment;\r\nimport androidx.fragment.app.FragmentTransaction;\r\n\r\nimport android.content.Context;\r\nimport android.content.SharedPreferences;\r\nimport android.database.Cursor;\r\nimport android.os.Bundle;\r\nimport android.view.Menu;\r\nimport android.view.MenuItem;\r\nimport android.widget.EditText;\r\nimport android.widget.ImageView;\r\nimport android.widget.TextView;\r\nimport android.widget.Toast;\r\n\r\nimport com.google.android.material.bottomnavigation.BottomNavigationView;\r\nimport com.google.android.material.navigation.NavigationBarView;\r\nimport com.google.android.material.navigation.NavigationView;\r\n\r\nimport edu.huflit.doanpm_th.Object.User;\r\nimport edu.huflit.doanpm_th.SQLite.DBHelper;\r\nimport edu.huflit.doanpm_th.SQLite.MyDatabase;\r\n\r\npublic class ManHinhChinh extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{\r\n    private static final int FR_TRANG_CHU = 0;\r\n    private int currentFragment = FR_TRANG_CHU;\r\n    DrawerLayout drawerLayout;\r\n    Toolbar toolbar;\r\n    public static NavigationView navigationView;\r\n    BottomNavigationView bottomNavigationView;\r\n    EditText edt_tim_kiem;\r\n    ImageView img_tim_kiem;\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_man_hinh_chinh);\r\n        setTitle(\"\");\r\n        anhXa();\r\n        //Hiển thị thông tin đăng nhập lên header\r\n        SharedPreferences get_user = getSharedPreferences(\"login\", MODE_PRIVATE);\r\n        String username = get_user.getString(\"username\", null);\r\n        boolean is_login = get_user.getBoolean(\"is_login\", false);\r\n        if (is_login == false)\r\n        {\r\n            TextView show_username2 = navigationView.getHeaderView(0).findViewById(R.id.username1);\r\n            TextView show_email2 = navigationView.getHeaderView(0).findViewById(R.id.email1);\r\n            show_email2.setText(\"Email\");\r\n            show_username2.setText(\"Username\");\r\n            replaceFragment(new ManHinhUser());\r\n        }\r\n        else\r\n        {\r\n            MyDatabase database = new MyDatabase(getApplicationContext());\r\n            //LẤY USER NAME EMAIL SHOW LÊN HEADER\r\n            TextView show_username = navigationView.getHeaderView(0).findViewById(R.id.username1);\r\n            TextView show_email = navigationView.getHeaderView(0).findViewById(R.id.email1);\r\n            Cursor cursor = database.getUserByUsername(username);\r\n\r\n            int username_index = cursor.getColumnIndex(DBHelper.USERNAME_USER);\r\n            int email_index = cursor.getColumnIndex(DBHelper.EMAIL_USER);\r\n            cursor.moveToFirst();\r\n\r\n            show_username.setText(cursor.getString(username_index));\r\n            show_email.setText(cursor.getString(email_index));\r\n            cursor.close();\r\n            replaceFragment(new ManHinhUser());\r\n        }\r\n        //Hiển thị trang chủ\r\n        replaceFragment(new ManHinhUser());\r\n\r\n        //ADD Toolbar\r\n        setSupportActionBar(toolbar);\r\n\r\n        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,   R.string.navigation_drawer_open, R.string.navigation_drawer_close);\r\n\r\n        drawerLayout.addDrawerListener(toggle);\r\n        toggle.syncState();\r\n\r\n        navigationView.setNavigationItemSelectedListener(this);\r\n\r\n        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {\r\n            @Override\r\n            public boolean onNavigationItemSelected(@NonNull MenuItem item) {\r\n                int itemId = item.getItemId();\r\n                if (itemId == R.id.action_trang_chu)\r\n                {\r\n                    if (currentFragment != FR_TRANG_CHU)\r\n                    {\r\n                        currentFragment = FR_TRANG_CHU;\r\n                    }\r\n                    replaceFragment(new ManHinhUser());\r\n                }\r\n                return true;\r\n            }\r\n        });\r\n        //Kiểm tra đăng nhập, nếu chưa thì hiện đăng nhập, ngược lại hiện đăng xuất trên menu\r\n        SharedPreferences sharedPreferences = getSharedPreferences(\"login\", MODE_PRIVATE);\r\n        Menu navigationMenu = navigationView.getMenu();\r\n        MenuItem menuItem = navigationMenu.findItem(R.id.nav_tittle6);\r\n        boolean check_login = sharedPreferences.getBoolean(\"is_login\", false);\r\n        if (check_login == false)\r\n        {\r\n            menuItem.setTitle(\"Đăng nhập\");\r\n        }\r\n        else\r\n        {\r\n            menuItem.setTitle(\"Đăng xuất\");\r\n        }\r\n    }\r\n    public void anhXa()\r\n    {\r\n        drawerLayout = (DrawerLayout) findViewById(R.id.hdrawer_layout);\r\n        toolbar = (Toolbar) findViewById(R.id.htoolbar);\r\n        navigationView = (NavigationView) findViewById(R.id.hnavigation_view);\r\n        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav);\r\n\r\n        img_tim_kiem = (ImageView) findViewById(R.id.img_tim_kiem);\r\n        edt_tim_kiem = (EditText) findViewById(R.id.edt_tim_kiem);\r\n    }\r\n    @Override\r\n    public boolean onNavigationItemSelected(@NonNull MenuItem item) {\r\n        int id = item.getItemId();\r\n        if (id == R.id.nav_tittle3)\r\n        {\r\n\r\n        }\r\n        else if (id == R.id.nav_tittle6)\r\n        {\r\n            SharedPreferences sharedPreferences = getSharedPreferences(\"login\", MODE_PRIVATE);\r\n            SharedPreferences.Editor editor = sharedPreferences.edit();\r\n            boolean check_login = sharedPreferences.getBoolean(\"is_login\", false);\r\n            if (check_login == false)\r\n            {\r\n                replaceFragment(new DangNhap());\r\n            }\r\n            else if (check_login)\r\n            {\r\n                //Khi đăng xuất thì header ko còn hiện username và email\r\n                TextView show_username2 = navigationView.getHeaderView(0).findViewById(R.id.username1);\r\n                TextView show_email2 = navigationView.getHeaderView(0).findViewById(R.id.email1);\r\n                show_email2.setText(\"Email\");\r\n                show_username2.setText(\"Username\");\r\n\r\n                SharedPreferences sharedPreferences1 = getSharedPreferences(\"login\", MODE_PRIVATE);\r\n                SharedPreferences.Editor editorr = sharedPreferences1.edit();\r\n                editorr.putBoolean(\"is_login\", false);\r\n                editorr.putString(\"username\", null);\r\n                editorr.apply();\r\n                Toast.makeText(ManHinhChinh.this, \"Đã đăng xuất\", Toast.LENGTH_LONG).show();\r\n\r\n                //Kiểm tra đăng nhập, nếu chưa thì hiện đăng nhập, ngược lại hiện đăng xuất trên menu\r\n                Menu navigationMenu = navigationView.getMenu();\r\n                MenuItem menuItem = navigationMenu.findItem(R.id.nav_tittle6);\r\n                menuItem.setTitle(\"Đăng nhập\");\r\n                replaceFragment(new ManHinhUser());\r\n\r\n            }\r\n        }\r\n\r\n        //Đóng drawer\r\n        drawerLayout.closeDrawer(GravityCompat.START);\r\n        return true;\r\n    }\r\n    private void replaceFragment(Fragment fragment)\r\n    {\r\n        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();\r\n        transaction.replace(R.id.hcontent_frame, fragment);\r\n        transaction.commit();\r\n    }\r\n    public void gotoTrangChu()\r\n    {\r\n        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();\r\n        ManHinhUser manHinhUser = new ManHinhUser();\r\n\r\n        fragmentTransaction.replace(R.id.hcontent_frame, manHinhUser);\r\n        fragmentTransaction.commit();\r\n    }\r\n    public void gotoChiTietSach()\r\n    {\r\n        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();\r\n        ChiTietSach chiTietSach = new ChiTietSach();\r\n\r\n        fragmentTransaction.replace(R.id.hcontent_frame, chiTietSach);\r\n        fragmentTransaction.commit();\r\n    }\r\n    public void gotoDangKy()\r\n    {\r\n        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();\r\n        DangKy dangKy = new DangKy();\r\n\r\n        fragmentTransaction.replace(R.id.hcontent_frame, dangKy);\r\n        fragmentTransaction.commit();\r\n    }\r\n    public void gotoDangNhap()\r\n    {\r\n        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();\r\n        DangNhap dangNhap = new DangNhap();\r\n\r\n        fragmentTransaction.replace(R.id.hcontent_frame, dangNhap);\r\n        fragmentTransaction.commit();\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/edu/huflit/doanpm_th/ManHinhChinh.java b/app/src/main/java/edu/huflit/doanpm_th/ManHinhChinh.java
+--- a/app/src/main/java/edu/huflit/doanpm_th/ManHinhChinh.java	(revision 39604e8831dfc044849eb7742ef3c627904178fe)
++++ b/app/src/main/java/edu/huflit/doanpm_th/ManHinhChinh.java	(date 1699090969345)
+@@ -15,6 +15,7 @@
+ import android.os.Bundle;
+ import android.view.Menu;
+ import android.view.MenuItem;
++import android.view.View;
+ import android.widget.EditText;
+ import android.widget.ImageView;
+ import android.widget.TextView;
+@@ -113,6 +114,25 @@
+         {
+             menuItem.setTitle("Đăng xuất");
+         }
++        //Tìm kiếm sách
++        img_tim_kiem.setOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View v) {
++                if (edt_tim_kiem.length() == 0)
++                {
++                    Toast.makeText(ManHinhChinh.this, "Vui lòng nhập thông tin tìm kiếm", Toast.LENGTH_LONG).show();
++                }
++                else
++                {
++                    String ten_sach_tim_kiem = edt_tim_kiem.getText().toString().trim();
++                    SharedPreferences name_sach = getSharedPreferences("search_sach", MODE_PRIVATE);
++                    SharedPreferences.Editor editor = name_sach.edit();
++                    editor.putString("name_sach", ten_sach_tim_kiem);
++                    editor.apply();
++                    replaceFragment(new TimKiemSach());
++                }
++            }
++        });
+     }
+     public void anhXa()
+     {
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_10_28_2023_12_30_AM__Changes_.xml
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Update_at_10_28_2023_12_30_AM__Changes_.xml b/.idea/shelf/Uncommitted_changes_before_Update_at_10_28_2023_12_30_AM__Changes_.xml
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Update_at_10_28_2023_12_30_AM__Changes_.xml	(revision 39604e8831dfc044849eb7742ef3c627904178fe)
++++ /dev/null	(revision 39604e8831dfc044849eb7742ef3c627904178fe)
+@@ -1,4 +0,0 @@
+-<changelist name="Uncommitted_changes_before_Update_at_10_28_2023_12_30_AM_[Changes]" date="1698427837558" recycled="true" deleted="true">
+-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_28_2023_12_30_AM_[Changes]/shelved.patch" />
+-  <option name="DESCRIPTION" value="Uncommitted changes before Update at 10/28/2023 12:30 AM [Changes]" />
+-</changelist>
+\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_10_28_2023_12_30_AM_[Changes]/shelved.patch
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Update_at_10_28_2023_12_30_AM_[Changes]/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Update_at_10_28_2023_12_30_AM_[Changes]/shelved.patch
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Update_at_10_28_2023_12_30_AM_[Changes]/shelved.patch	(revision 39604e8831dfc044849eb7742ef3c627904178fe)
++++ /dev/null	(revision 39604e8831dfc044849eb7742ef3c627904178fe)
+@@ -1,36 +0,0 @@
+-Index: app/src/main/java/edu/huflit/doanpm_th/ManHinhUser.java
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>package edu.huflit.doanpm_th;\r\n\r\nimport android.content.Context;\r\nimport android.content.SharedPreferences;\r\nimport android.database.Cursor;\r\nimport android.graphics.Bitmap;\r\nimport android.graphics.Canvas;\r\nimport android.graphics.drawable.Drawable;\r\nimport android.os.Bundle;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.AdapterView;\r\nimport android.widget.ListView;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.annotation.Nullable;\r\nimport androidx.core.content.ContextCompat;\r\nimport androidx.fragment.app.Fragment;\r\n\r\nimport java.io.ByteArrayOutputStream;\r\nimport java.util.ArrayList;\r\n\r\nimport edu.huflit.doanpm_th.Adapter.MyAdapterShowSach;\r\nimport edu.huflit.doanpm_th.Object.LoaiSach;\r\nimport edu.huflit.doanpm_th.Object.Sach;\r\nimport edu.huflit.doanpm_th.SQLite.DBHelper;\r\nimport edu.huflit.doanpm_th.SQLite.MyDatabase;\r\n\r\npublic class ManHinhUser extends Fragment {\r\n    View view;\r\n    MyDatabase database;\r\n    public static ListView listView;\r\n    public static ArrayList<Sach> saches;\r\n    ManHinhChinh manHinhChinh;\r\n    @Nullable\r\n    @Override\r\n    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {\r\n        view = inflater.inflate(R.layout.man_hinh_user, container, false);\r\n        anhXa();\r\n        manHinhChinh = (ManHinhChinh) getActivity();\r\n        database = new MyDatabase(getActivity());\r\n        saches = new ArrayList<>();\r\n        //Thêm sách\r\n        insertBook();\r\n        capNhatDuLieuDSach();\r\n\r\n        return view;\r\n    }\r\n    public void anhXa()\r\n    {\r\n        listView = (ListView) view.findViewById(R.id.lv_show_sach_for_user);\r\n    }\r\n    public void capNhatDuLieuDSach()\r\n    {\r\n        if (saches == null)\r\n        {\r\n            saches = new ArrayList<Sach>();\r\n        }\r\n        else\r\n        {\r\n            saches.removeAll(saches);\r\n        }\r\n        database = new MyDatabase(getActivity());\r\n        Cursor cursor = database.layDuLieuSach();\r\n        if (cursor != null)\r\n        {\r\n            int ten_sach_index = cursor.getColumnIndex(DBHelper.TEN_SACH_S);\r\n            int ma_sach_index = cursor.getColumnIndex(DBHelper.MA_SACH_S);\r\n            int img_sach_index = cursor.getColumnIndex(DBHelper.IMAGE_SACH);\r\n            while (cursor.moveToNext())\r\n            {\r\n                Sach sach = new Sach();\r\n                if (ten_sach_index != -1)\r\n                {\r\n                    sach.setTen_sach_s(cursor.getString(ten_sach_index));\r\n                }\r\n                if (ma_sach_index != -1)\r\n                {\r\n                    sach.setMa_sach_s(cursor.getInt(ma_sach_index));\r\n                }\r\n                if (img_sach_index != -1)\r\n                {\r\n                    sach.setImage_sach(cursor.getBlob(img_sach_index));\r\n                }\r\n                saches.add(sach);\r\n            }\r\n        }\r\n        if (saches != null)\r\n        {\r\n            listView.setAdapter(new MyAdapterShowSach(getActivity()));\r\n        }\r\n        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {\r\n            @Override\r\n            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {\r\n\r\n            }\r\n        });\r\n    }\r\n    public void insertDauSach()\r\n    {\r\n        LoaiSach loaiSach1 = new LoaiSach();\r\n        loaiSach1.setLoai_sach_ls(\"Truyện tranh\");\r\n\r\n        LoaiSach loaiSach2 = new LoaiSach();\r\n        loaiSach2.setLoai_sach_ls(\"Tiểu thuyết\");\r\n\r\n        LoaiSach loaiSach3 = new LoaiSach();\r\n        loaiSach3.setLoai_sach_ls(\"Cổ tích\");\r\n\r\n        MyDatabase myDatabase = new MyDatabase(getActivity());\r\n        myDatabase.addLoaiSach(loaiSach1);\r\n        myDatabase.addLoaiSach(loaiSach2);\r\n        myDatabase.addLoaiSach(loaiSach3);\r\n\r\n    }\r\n    public void insertBook()\r\n    {\r\n        insertDauSach();\r\n\r\n        Sach sach1 = new Sach();\r\n        sach1.setImage_sach(convertImageToByArray(getActivity(), R.drawable.sach1));\r\n        sach1.setMa_loai_sach_s(1);\r\n        sach1.setTen_sach_s(\"Đô rê mon\");\r\n        sach1.setNam_xuat_ban_s(2022);\r\n        sach1.setNha_xuat_ban_s(\"ABC\");\r\n        sach1.setMo_ta_sach(\"\");\r\n        sach1.setTrang_thai_s(0);\r\n        sach1.setTac_gia_s(\"Khôi\");\r\n\r\n        Sach sach2 = new Sach();\r\n        sach2.setImage_sach(convertImageToByArray(getActivity(), R.drawable.sach2));\r\n        sach2.setMa_loai_sach_s(2);\r\n        sach2.setTen_sach_s(\"Sách tiểu thuyết\");\r\n        sach2.setNam_xuat_ban_s(2022);\r\n        sach2.setNha_xuat_ban_s(\"ABCD\");\r\n        sach2.setMo_ta_sach(\"\");\r\n        sach2.setTrang_thai_s(0);\r\n        sach2.setTac_gia_s(\"Phạm\");\r\n\r\n        Sach sach3 = new Sach();\r\n        sach3.setImage_sach(convertImageToByArray(getActivity(), R.drawable.sach3));\r\n        sach3.setMa_loai_sach_s(3);\r\n        sach3.setTen_sach_s(\"Ăn khế trả vàng\");\r\n        sach3.setNam_xuat_ban_s(2022);\r\n        sach3.setNha_xuat_ban_s(\"ABCD\");\r\n        sach3.setMo_ta_sach(\"\");\r\n        sach3.setTrang_thai_s(0);\r\n        sach3.setTac_gia_s(\"Phạm\");\r\n\r\n        MyDatabase myDatabase = new MyDatabase(getActivity());\r\n        myDatabase.addBook(sach1);\r\n        myDatabase.addBook(sach2);\r\n        myDatabase.addBook(sach3);\r\n\r\n    }\r\n    private byte[] convertImageToByArray(Context context, int drawableResourceId)\r\n    {\r\n        Drawable drawable = ContextCompat.getDrawable(context, drawableResourceId);\r\n        if (drawable != null)\r\n        {\r\n            Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);\r\n            Canvas canvas = new Canvas(bitmap);\r\n            drawable.setBounds(0,0, canvas.getWidth(), canvas.getHeight());\r\n            drawable.draw(canvas);\r\n            // Nén và chuyển đổi Bitmap thành mảng byte\r\n\r\n            ByteArrayOutputStream stream = new ByteArrayOutputStream();\r\n            bitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);\r\n            return stream.toByteArray();\r\n        }\r\n        else\r\n        {\r\n            return null;\r\n        }\r\n    }\r\n}\r\n
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/app/src/main/java/edu/huflit/doanpm_th/ManHinhUser.java b/app/src/main/java/edu/huflit/doanpm_th/ManHinhUser.java
+---- a/app/src/main/java/edu/huflit/doanpm_th/ManHinhUser.java	(revision 4445ac8c099bf79820af6be36f9cb93f6e977312)
+-+++ b/app/src/main/java/edu/huflit/doanpm_th/ManHinhUser.java	(date 1698348475948)
+-@@ -42,7 +42,7 @@
+-         database = new MyDatabase(getActivity());
+-         saches = new ArrayList<>();
+-         //Thêm sách
+--        insertBook();
+-+        //insertBook();
+-         capNhatDuLieuDSach();
+- 
+-         return view;
+-Index: .idea/gradle.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"GradleSettings\">\r\n    <option name=\"linkedExternalProjectsSettings\">\r\n      <GradleProjectSettings>\r\n        <option name=\"testRunner\" value=\"GRADLE\" />\r\n        <option name=\"distributionType\" value=\"DEFAULT_WRAPPED\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"gradleJvm\" value=\"jbr-17\" />\r\n        <option name=\"modules\">\r\n          <set>\r\n            <option value=\"$PROJECT_DIR$\" />\r\n            <option value=\"$PROJECT_DIR$/app\" />\r\n          </set>\r\n        </option>\r\n      </GradleProjectSettings>\r\n    </option>\r\n  </component>\r\n</project>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/.idea/gradle.xml b/.idea/gradle.xml
+---- a/.idea/gradle.xml	(revision 4445ac8c099bf79820af6be36f9cb93f6e977312)
+-+++ b/.idea/gradle.xml	(date 1698349127990)
+-@@ -1,5 +1,6 @@
+- <?xml version="1.0" encoding="UTF-8"?>
+- <project version="4">
+-+  <component name="GradleMigrationSettings" migrationVersion="1" />
+-   <component name="GradleSettings">
+-     <option name="linkedExternalProjectsSettings">
+-       <GradleProjectSettings>
+Index: app/src/main/java/edu/huflit/doanpm_th/Adapter/MyAdapterTimKiemSach.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/edu/huflit/doanpm_th/Adapter/MyAdapterTimKiemSach.java b/app/src/main/java/edu/huflit/doanpm_th/Adapter/MyAdapterTimKiemSach.java
+new file mode 100644
+--- /dev/null	(date 1699090969337)
++++ b/app/src/main/java/edu/huflit/doanpm_th/Adapter/MyAdapterTimKiemSach.java	(date 1699090969337)
+@@ -0,0 +1,61 @@
++package edu.huflit.doanpm_th.Adapter;
++
++import android.content.Context;
++import android.graphics.Bitmap;
++import android.graphics.BitmapFactory;
++import android.view.LayoutInflater;
++import android.view.View;
++import android.view.ViewGroup;
++import android.widget.BaseAdapter;
++import android.widget.ImageView;
++import android.widget.TextView;
++
++import edu.huflit.doanpm_th.R;
++import edu.huflit.doanpm_th.TimKiemSach;
++
++public class MyAdapterTimKiemSach extends BaseAdapter {
++    LayoutInflater inflater;
++    TextView textView;
++    ImageView imageView;
++    Context context;
++    public MyAdapterTimKiemSach(Context context)
++    {
++        inflater = LayoutInflater.from(context);
++        this.context = context;
++    }
++    @Override
++    public int getCount() {
++        return TimKiemSach.saches.size();
++    }
++
++    @Override
++    public Object getItem(int i) {
++        return TimKiemSach.saches.get(i);
++    }
++
++    @Override
++    public long getItemId(int i) {
++        return TimKiemSach.saches.get(i).getMa_sach_s();
++    }
++
++
++    @Override
++    public View getView(int i, View convertView, ViewGroup parent) {
++
++        View view = inflater.inflate(R.layout.item_list_tim_kiem_sach, null);
++
++        textView = (TextView) view.findViewById(R.id.tks_tv1);
++        textView = (TextView) view.findViewById(R.id.tks_tv2);
++        textView = (TextView) view.findViewById(R.id.tks_tv3);
++        textView.setText(Integer.toString(TimKiemSach.saches.get(i).getMa_sach_s()));
++        textView = (TextView) view.findViewById(R.id.tks_tv4);
++        textView.setText(TimKiemSach.saches.get(i).getTen_sach_s());
++
++        byte[] bytes = TimKiemSach.saches.get(i).getImage_sach();
++        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
++        imageView = (ImageView) view.findViewById(R.id.tks_image);
++        imageView.setImageBitmap(bitmap);
++
++        return view;
++    }
++}
+Index: app/src/main/res/layout/tim_kiem_sach.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/tim_kiem_sach.xml b/app/src/main/res/layout/tim_kiem_sach.xml
+new file mode 100644
+--- /dev/null	(date 1699090969361)
++++ b/app/src/main/res/layout/tim_kiem_sach.xml	(date 1699090969361)
+@@ -0,0 +1,21 @@
++<?xml version="1.0" encoding="utf-8"?>
++<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"
++    android:orientation="vertical">
++    <ImageView
++        android:id="@+id/search_back"
++        android:layout_marginTop="15dp"
++        android:layout_marginLeft="15dp"
++        android:layout_width="48dp"
++        android:layout_height="32dp"
++        android:src="@drawable/icon_back1"/>
++
++    <ListView
++        android:background="@drawable/edit_edittext2"
++        android:id="@+id/lv_search"
++        android:layout_marginLeft="25dp"
++        android:layout_marginTop="15dp"
++        android:layout_width="345dp"
++        android:layout_height="600dp"/>
++</LinearLayout>
+\ No newline at end of file
+Index: app/src/main/res/layout/item_list_tim_kiem_sach.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/item_list_tim_kiem_sach.xml b/app/src/main/res/layout/item_list_tim_kiem_sach.xml
+new file mode 100644
+--- /dev/null	(date 1699090969357)
++++ b/app/src/main/res/layout/item_list_tim_kiem_sach.xml	(date 1699090969357)
+@@ -0,0 +1,55 @@
++<?xml version="1.0" encoding="utf-8"?>
++<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent">
++    <ImageView
++        android:layout_marginLeft="15dp"
++        android:layout_marginTop="25dp"
++        android:id="@+id/tks_image"
++        android:layout_width="64dp"
++        android:layout_height="64dp"
++        android:src="@drawable/icon_book_shelf"/>
++    <LinearLayout
++        android:layout_marginLeft="15dp"
++        android:layout_width="90dp"
++        android:layout_height="100dp"
++        android:orientation="vertical">
++
++        <TextView
++            android:id="@+id/tks_tv1"
++            android:layout_width="90dp"
++            android:layout_height="wrap_content"
++            android:layout_marginTop="25dp"
++            android:text="Mã sách: "
++            android:textColor="@color/black" />
++
++        <TextView
++            android:id="@+id/tks_tv2"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:layout_marginTop="10dp"
++            android:text="Tên sách: "
++            android:textColor="@color/black" />
++    </LinearLayout>
++    <LinearLayout
++        android:layout_width="115dp"
++        android:layout_height="100dp"
++        android:orientation="vertical">
++
++        <TextView
++            android:id="@+id/tks_tv3"
++            android:layout_marginTop="25dp"
++            android:textColor="@color/black"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:text="Mã sách" />
++
++        <TextView
++            android:id="@+id/tks_tv4"
++            android:layout_marginTop="10dp"
++            android:textColor="@color/black"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:text="Tên sách" />
++    </LinearLayout>
++</LinearLayout>
+\ No newline at end of file
+Index: app/src/main/java/edu/huflit/doanpm_th/TimKiemSach.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/edu/huflit/doanpm_th/TimKiemSach.java b/app/src/main/java/edu/huflit/doanpm_th/TimKiemSach.java
+new file mode 100644
+--- /dev/null	(date 1699090969354)
++++ b/app/src/main/java/edu/huflit/doanpm_th/TimKiemSach.java	(date 1699090969354)
+@@ -0,0 +1,96 @@
++package edu.huflit.doanpm_th;
++
++import android.content.Context;
++import android.content.SharedPreferences;
++import android.database.Cursor;
++import android.os.Bundle;
++import android.view.LayoutInflater;
++import android.view.View;
++import android.view.ViewGroup;
++import android.widget.AdapterView;
++import android.widget.ImageView;
++import android.widget.ListView;
++
++import androidx.annotation.NonNull;
++import androidx.annotation.Nullable;
++import androidx.fragment.app.Fragment;
++
++import java.util.ArrayList;
++
++import edu.huflit.doanpm_th.Adapter.MyAdapterTimKiemSach;
++import edu.huflit.doanpm_th.Object.Sach;
++import edu.huflit.doanpm_th.SQLite.DBHelper;
++import edu.huflit.doanpm_th.SQLite.MyDatabase;
++
++public class TimKiemSach extends Fragment {
++    View view;
++    public static ListView listView;
++    public static ArrayList<Sach> saches;
++    MyDatabase database;
++    ManHinhChinh manHinhChinh;
++    ImageView back;
++    @Nullable
++    @Override
++    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
++        view = inflater.inflate(R.layout.tim_kiem_sach, container, false);
++        database = new MyDatabase(getActivity());
++        manHinhChinh = (ManHinhChinh) getActivity();
++        saches = new ArrayList<>();
++        anhXa();
++        capNhatDuLieuDSach();
++        return view;
++    }
++    public void anhXa()
++    {
++        back = (ImageView) view.findViewById(R.id.search_back);
++        listView = (ListView) view.findViewById(R.id.lv_search);
++    }
++    public void capNhatDuLieuDSach()
++    {
++        if (saches == null)
++        {
++            saches = new ArrayList<Sach>();
++        }
++        else
++        {
++            saches.removeAll(saches);
++        }
++        SharedPreferences name_sach = getActivity().getSharedPreferences("search_sach", Context.MODE_PRIVATE);
++        String ten_sach = name_sach.getString("name_sach", null);
++        database = new MyDatabase(getActivity());
++        Cursor cursor = database.layDuLieuSachByName(ten_sach);
++        if (cursor != null)
++        {
++            int ten_sach_index = cursor.getColumnIndex(DBHelper.TEN_SACH_S);
++            int ma_sach_index = cursor.getColumnIndex(DBHelper.MA_SACH_S);
++            int img_sach_index = cursor.getColumnIndex(DBHelper.IMAGE_SACH);
++            while (cursor.moveToNext())
++            {
++                Sach sach = new Sach();
++                if (ten_sach_index != -1)
++                {
++                    sach.setTen_sach_s(cursor.getString(ten_sach_index));
++                }
++                if (ma_sach_index != -1)
++                {
++                    sach.setMa_sach_s(cursor.getInt(ma_sach_index));
++                }
++                if (img_sach_index != -1)
++                {
++                    sach.setImage_sach(cursor.getBlob(img_sach_index));
++                }
++                saches.add(sach);
++            }
++        }
++        if (saches != null)
++        {
++            listView.setAdapter(new MyAdapterTimKiemSach(getActivity()));
++        }
++        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
++            @Override
++            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
++
++            }
++        });
++    }
++}

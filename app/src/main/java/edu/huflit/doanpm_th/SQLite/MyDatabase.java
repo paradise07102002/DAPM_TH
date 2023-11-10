@@ -140,4 +140,13 @@ public class MyDatabase {
         Cursor cursor = database.rawQuery(select, null);
         return cursor;
     }
+    public long updateUser(User user)
+    {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DBHelper.FULLNAME_USER, user.getFullname_user());
+        contentValues.put(DBHelper.EMAIL_USER, user.getEmail_user());
+        contentValues.put(DBHelper.PHONE_USER, user.getPhone_user());
+        return database.update(DBHelper.TABLE_USER, contentValues, DBHelper.USERNAME_USER +
+                " = " + "'" + user.getUsername_user() + "'", null);
+    }
 }
