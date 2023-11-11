@@ -162,4 +162,10 @@ public class MyDatabase {
             return true;
         }
     }
+    public long doiMK(String username, String mat_khau_moi)
+    {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DBHelper.PASSWORD_USER, mat_khau_moi);
+        return database.update(DBHelper.TABLE_USER, contentValues, DBHelper.USERNAME_USER + " = " + "'" + username + "'", null);
+    }
 }
