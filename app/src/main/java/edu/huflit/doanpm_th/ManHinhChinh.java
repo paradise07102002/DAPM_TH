@@ -150,8 +150,9 @@ public class ManHinhChinh extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_tittle3)
         {
 
-        }
-        else if (id == R.id.nav_tittle6)
+        } else if (id == R.id.nav_tittle5) {
+            replaceFragment(new DoiMatKhau());
+        } else if (id == R.id.nav_tittle6)
         {
             SharedPreferences sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();

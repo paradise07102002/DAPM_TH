@@ -149,4 +149,23 @@ public class MyDatabase {
         return database.update(DBHelper.TABLE_USER, contentValues, DBHelper.USERNAME_USER +
                 " = " + "'" + user.getUsername_user() + "'", null);
     }
+    public boolean checkMK(String username, String password)
+    {
+        String select = "SELECT * FROM " + DBHelper.TABLE_USER + " WHERE " + DBHelper.USERNAME_USER + " = " + "'" + username + "'" + " AND " + DBHelper.PASSWORD_USER + " = " + "'" + password + "'";
+        Cursor cursor = database.rawQuery(select, null);
+        if (cursor.moveToFirst() == false)
+        {
+            return false;//mk cũ sai
+        }
+        else
+        {
+            return true;
+        }
+    }
+    public long doiMK(String username, String mat_khau_moi)
+    {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DBHelper.PASSWORD_USER, mat_khau_moi);
+        return database.update(DBHelper.TABLE_USER, contentValues, DBHelper.USERNAME_USER + " = " + "'" + username + "'", null);
+    }
 }
