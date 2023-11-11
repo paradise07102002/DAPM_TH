@@ -1,9 +1,8 @@
-package edu.huflit.doanqlthuvien.ManHinhUser;
+package edu.huflit.doanpm_th;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
@@ -19,9 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import edu.huflit.doanqlthuvien.ManHinhChinh;
-import edu.huflit.doanqlthuvien.MyDatabase;
-import edu.huflit.doanqlthuvien.R;
+import edu.huflit.doanpm_th.SQLite.MyDatabase;
 
 public class DoiMatKhau extends Fragment {
     View view;
@@ -40,8 +37,7 @@ public class DoiMatKhau extends Fragment {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Kiểm tra nếu là admin thì quay về màn hình admin,user thì quay về làm user'
-
+                manHinhChinh.gotoTrangChu();
             }
         });
         doi_mk.setOnClickListener(new View.OnClickListener() {
